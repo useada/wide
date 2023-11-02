@@ -94,7 +94,8 @@ func main() {
 	serveSingle("/favicon.ico", "./static/images/favicon.png")
 
 	// oauth
-	http.HandleFunc("/login/redirect", session.LoginRedirectHandler)
+	//http.HandleFunc("/login/redirect", session.LoginRedirectHandler)
+	http.HandleFunc("/login/redirect", session.LoginRedirectHandler2)
 	http.HandleFunc("/login/callback", session.LoginCallbackHandler)
 
 	// session

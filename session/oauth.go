@@ -32,6 +32,33 @@ import (
 
 var states = map[string]string{}
 
+func LoginRedirectHandler2(w http.ResponseWriter, r *http.Request) {
+	userId := "518699"
+	userName := "alra"
+	avatar := ""
+	user := conf.GetUser(userId)
+	if nil == user {
+		msg := addUser(userId, userName, avatar)
+		if userCreated != msg {
+			result := gulu.Ret.NewResult()
+			result.Code = -1
+			result.Msg = msg
+			gulu.Ret.RetResult(w, r, result)
+
+			return
+		}
+	}
+
+	// create a HTTP session
+	httpSession, _ := HTTPSession.Get(r, CookieName)
+	httpSession.Values["uid"] = "518699"
+	httpSession.Values["id"] = strconv.Itoa(rand.Int())
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	httpSession.Save(r, w)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 // LoginRedirectHandler redirects to HacPai auth page.
 func LoginRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	loginAuthURL := "https://ld246.com/login?goto=" + conf.Wide.Server + "/login/callback"
